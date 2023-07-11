@@ -23,9 +23,11 @@ import './ButtonChooser.scss';
 import { useField } from '../_Shared/FieldHelpers/FieldContext';
 import { forwardNativeElementProps } from '../../../Helpers';
 import { setupFieldComponent } from '../_Shared/FieldHelpers/setupFieldComponent';
-import { Key } from '../../../_Shared/Types/Key';
+import { FormValue } from '../../Types/FormValue';
 
-export interface ButtonChooserProps<T extends Key> extends FieldProps<T> {
+export interface ButtonChooserProps<
+OwnerFormValue extends FormValue = {}
+> extends FieldProps<any, OwnerFormValue> {
   label?: JSX.Element;
   color?: 'primary' | 'secondary' | 'tertiary';
   helperText?: JSX.Element;
@@ -44,7 +46,7 @@ const Option: Component<ButtonChooserOptionProps> = (props) => {
 };
 
 const ButtonChooser = setupFieldComponent(
-  forwardNativeElementProps<ButtonChooserProps<string>, HTMLDivElement>(
+  forwardNativeElementProps<ButtonChooserProps, HTMLDivElement>(
     (props, elProps) => {
       const {
         elementId: id,
@@ -137,7 +139,9 @@ const ButtonChooser = setupFieldComponent(
     [...FieldPropKeys, 'label', 'color', 'helperText', 'onChange', 'style']
   )
 ) as {
-  <T extends Key>(props: ButtonChooserProps<T> & ComponentProps<'div'>): JSX.Element;
+  <OwnerFormValue extends FormValue>(
+    props: ButtonChooserProps<OwnerFormValue> & ComponentProps<'div'>
+  ): JSX.Element;
   Option(props: ButtonChooserOptionProps): JSX.Element;
 };
 

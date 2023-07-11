@@ -14,6 +14,5 @@ type DeepGetPathArr<A, Path extends string[], T extends Required<A> = Required<A
       : T[Path[0]]
     : never;
 
-export type DeepGet<T extends object, Path extends string>
-  = DeepGetPathArr<T, Split<Path, '.'>>;
-
+export type DeepGet<T extends object, Path>
+  = Path extends string ? DeepGetPathArr<T, Split<Path, '.'>> : never;

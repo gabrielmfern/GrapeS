@@ -14,6 +14,8 @@ export type AddressFormValue = {
   numero: number;
   cep: string;
   bairro: string;
+
+  togglerVal: boolean;
 };
 
 const Address: Component<{
@@ -49,6 +51,7 @@ const Address: Component<{
           <AddressForm.Input
             name="cidade"
             label="Cidade"
+            type="text"
             placeholder="São Paulo"
             validators={[Validators.required]}
           />

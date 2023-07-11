@@ -4,10 +4,9 @@ import { FormProviderValue } from '../../../FormContext';
 import { FormValue } from '../../../Types/FormValue';
 
 import { FieldProps } from '../Types/FieldProps';
-import { LeavesOfObject } from '../../../Types/LeavesOfObject';
 
 export function setupFieldsDisabledSignal<
-  T extends FieldProps<LeavesOfObject<K>>,
+  T extends FieldProps<any, K>,
   K extends FormValue = FormValue
 >(props: T, form: FormProviderValue<K> | undefined): Signal<boolean> {
   let signal: Signal<boolean>;

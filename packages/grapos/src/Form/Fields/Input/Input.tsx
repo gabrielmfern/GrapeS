@@ -14,23 +14,36 @@ import { forwardNativeElementProps } from '../../../Helpers';
 import { mergeCallbacks } from '../../../Helpers';
 import { useField } from '../_Shared/FieldHelpers/FieldContext';
 import { setupFieldComponent } from '../_Shared/FieldHelpers/setupFieldComponent';
-import { Key } from '../../../_Shared/Types/Key';
+import { FormValue } from '../../Types/FormValue';
 
 export type InputOnChangeEvent = Event & {
   currentTarget: HTMLInputElement;
   target: Element;
 };
 
-export interface InputProps<FormFieldKeys extends Key> extends MaskedFieldProps<FormFieldKeys> {
+export type InputType = 'text' | 'email' | 'number' | 'email' | 'password' | undefined;
+
+export interface InputProps<
+OwnerFormValue extends FormValue = {},
+Type extends InputType = undefined
+> extends MaskedFieldProps<
+Type extends 'text' ? string
+: Type extends 'email' ? string
+: Type extends 'number' ? number
+: Type extends 'password' ? string
+: string,
+OwnerFormValue
+> {
   label?: JSX.Element;
 
+  type?: Type;
   color?: 'primary' | 'secondary' | 'tertiary';
 
   onChange?: (value: string, event?: InputOnChangeEvent) => void;
 }
 
 const Input = setupFieldComponent(
-  forwardNativeElementProps<InputProps<string>, HTMLInputElement, JSX.InputHTMLAttributes<HTMLInputElement>>(
+  forwardNativeElementProps<InputProps, HTMLInputElement, JSX.InputHTMLAttributes<HTMLInputElement>>(
     (props, elProps) => {
       const {
         elementId: id,
@@ -42,7 +55,7 @@ const Input = setupFieldComponent(
       } = useField()!;
 
       createEffect(() => {
-        if (props.mask && typeof elProps.type !== 'undefined' && elProps.type === 'number') {
+        if (props.mask && typeof props.type !== 'undefined' && props.type === 'number') {
           throw new Error(`Error with Input named ${props.name}: Cannot have a mask on a number input!`);
         }
       });
@@ -89,8 +102,10 @@ const Input = setupFieldComponent(
         </FieldInternalWrapper>
       );
     },
-    ['mask', 'label', 'helperText', 'color', 'onChange', ...MaskedFieldPropsKeys]
+    ['mask', 'label', 'helperText', 'type', 'color', 'onChange', ...MaskedFieldPropsKeys]
   )
-);
+) as <OwnerFormValue extends FormValue, Type extends InputType>(
+  props: InputProps<OwnerFormValue, Type> & JSX.InputHTMLAttributes<HTMLInputElement>
+) => JSX.Element;
 
 export default Input;

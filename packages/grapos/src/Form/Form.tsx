@@ -24,9 +24,7 @@ import {
   TextArea,
   Toggler,
 } from './Fields';
-import { LeavesOfObject } from './Types/LeavesOfObject';
-import { InputProps } from './Fields/Input/Input';
-import { FieldProps } from './Fields/_Shared/Types/FieldProps';
+import { InputProps, InputType } from './Fields/Input/Input';
 import { SliderProps } from './Fields/Slider/Slider';
 import { SelectOptionProps, SelectProps } from './Fields/Select/Select';
 import {
@@ -55,59 +53,56 @@ export interface FormProps<Value extends FormValue = FormValue>
 }
 
 export type Form<
-  Value extends FormValue,
-  Leaves extends LeavesOfObject<Value> = LeavesOfObject<Value>
+  Value extends FormValue
 > = {
   (props: Omit<FormProps<Value>, 'identification' | 'formStore'>): JSX.Element;
-  Input(
-    props: InputProps<Leaves> &
-      JSX.InputHTMLAttributes<HTMLInputElement> &
-      FieldProps<Leaves>
+  Input<Type extends InputType>(
+    props: InputProps<Value, Type> & 
+      Omit<JSX.InputHTMLAttributes<HTMLInputElement>, keyof InputProps>
+    
   ): JSX.Element;
   Slider(
-    props: SliderProps<Leaves> &
-      JSX.InputHTMLAttributes<HTMLInputElement> &
-      FieldProps<Leaves>
+    props: SliderProps<Value> &
+      Omit<JSX.InputHTMLAttributes<HTMLInputElement>, keyof SliderProps>
   ): JSX.Element;
   Select: {
     (
-      props: SelectProps<Leaves> & JSX.HTMLAttributes<HTMLDivElement>
+      props: SelectProps<Value> & 
+        Omit<JSX.HTMLAttributes<HTMLDivElement>, keyof SelectProps>
     ): JSX.Element;
     Option(props: SelectOptionProps): JSX.Element;
   };
   ButtonChooser: {
     (
-      props: ButtonChooserProps<Leaves> & JSX.HTMLAttributes<HTMLDivElement>
+      props: ButtonChooserProps<Value> & 
+        Omit<JSX.HTMLAttributes<HTMLDivElement>, keyof ButtonChooserProps>
     ): JSX.Element;
     Option(props: ButtonChooserOptionProps): JSX.Element;
   };
   RadioGroup: {
     (
-      props: RadioGroupProps<Leaves> & JSX.HTMLAttributes<HTMLDivElement>
+      props: RadioGroupProps<Value> & 
+        Omit<JSX.HTMLAttributes<HTMLDivElement>, keyof RadioGroupProps>
     ): JSX.Element;
     Option(
       props: RadioGroupOptionProps & JSX.InputHTMLAttributes<HTMLInputElement>
     ): JSX.Element;
   };
   TextArea(
-    props: TextAreaProps<Leaves> &
-      JSX.InputHTMLAttributes<HTMLTextAreaElement> &
-      FieldProps<Leaves>
+    props: TextAreaProps<Value> &
+      Omit<JSX.InputHTMLAttributes<HTMLTextAreaElement>, keyof TextAreaProps>
   ): JSX.Element;
   Datepicker(
-    props: DatepickerProps<Leaves> &
-      JSX.HTMLAttributes<HTMLDivElement> &
-      FieldProps<Leaves>
+    props: DatepickerProps<Value> &
+      Omit<JSX.HTMLAttributes<HTMLDivElement>, keyof DatepickerProps>
   ): JSX.Element;
   Toggler(
-    props: TogglerProps<Leaves> &
-      JSX.HTMLAttributes<HTMLInputElement> &
-      FieldProps<Leaves>
+    props: TogglerProps<Value> &
+      Omit<JSX.HTMLAttributes<HTMLInputElement>, keyof TogglerProps>
   ): JSX.Element;
   Checkbox(
-    props: CheckboxProps<Leaves> &
-      JSX.HTMLAttributes<HTMLInputElement> &
-      FieldProps<Leaves>
+    props: CheckboxProps<Value> &
+      Omit<JSX.HTMLAttributes<HTMLInputElement>, keyof CheckboxProps>
   ): JSX.Element;
   store: [
     get: FormStore<Partial<Value>>,
@@ -147,12 +142,11 @@ export type Form<
  * ```
  */
 export function createForm<
-  Value extends FormValue,
-  Leaves extends LeavesOfObject<Value> = LeavesOfObject<Value>
+  Value extends FormValue
 >(
   identification: string,
   initialValue: Partial<Value> = {}
-): Form<Value, Leaves> {
+): Form<Value> {
   // eslint-disable-next-line solid/reactivity
   const formStore = createStore(new FormStore<Partial<Value>>(initialValue));
 
@@ -166,19 +160,19 @@ export function createForm<
     />
   );
 
-  form.Input = Input<Leaves>;
-  form.Slider = Slider<Leaves>;
-  form.Select = Select<Leaves>;
-  form.ButtonChooser = ButtonChooser<Leaves>;
-  form.RadioGroup = RadioGroup<Leaves>;
-  form.TextArea = TextArea<Leaves>;
-  form.Datepicker = Datepicker<Leaves>;
-  form.Toggler = Toggler<Leaves>;
-  form.Checkbox = Checkbox<Leaves>;
+  form.Input = Input<Value, undefined>;
+  form.Slider = Slider<Value>;
+  form.Select = Select<Value>;
+  form.ButtonChooser = ButtonChooser<Value>;
+  form.RadioGroup = RadioGroup<Value>;
+  form.TextArea = TextArea<Value>;
+  form.Datepicker = Datepicker<Value>;
+  form.Toggler = Toggler<Value>;
+  form.Checkbox = Checkbox<Value>;
 
   form.store = formStore;
 
-  return form;
+  return form as Form<Value>;
 }
 
 const Form = <Value extends FormValue>(

@@ -5,10 +5,9 @@ import { FormFieldValue } from '../../../Types/FormFieldValue';
 import { FormValue } from '../../../Types/FormValue';
 
 import { FieldProps } from '../Types/FieldProps';
-import { LeavesOfObject } from '../../../Types/LeavesOfObject';
 
 export function setupFieldsValueSignal<
-  T extends FieldProps<LeavesOfObject<K>>,
+  T extends FieldProps<any, K>,
   K extends FormValue = FormValue,
   ValueType extends FormFieldValue = FormFieldValue
 >(props: T, form: FormProviderValue<K> | undefined, initialValue: ValueType = '' as any): Signal<ValueType | undefined> {

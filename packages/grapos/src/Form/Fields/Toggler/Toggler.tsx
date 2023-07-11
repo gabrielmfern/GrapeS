@@ -5,25 +5,24 @@ import { FieldInternalWrapper } from '../_Shared';
 import Label from '../_Shared/Label/Label';
 
 import { FieldPropKeys, FieldProps } from '../_Shared/Types/FieldProps';
+import { FormValue } from '../../Types/FormValue';
 
 import './Toggler.scss';
 import { useField } from '../_Shared/FieldHelpers/FieldContext';
 import { setupFieldComponent } from '../_Shared/FieldHelpers/setupFieldComponent';
 import { forwardNativeElementProps } from '../../../Helpers';
-import { Key } from '../../../_Shared/Types/Key';
 
-export interface TogglerProps<T extends Key> extends FieldProps<T> {
+export interface TogglerProps<OwnerFormValue extends FormValue = {}> extends FieldProps<boolean, OwnerFormValue> {
   label?: JSX.Element;
 
   color?: 'primary' | 'secondary' | 'tertiary';
   size?: 'small' | 'medium' | 'large';
 
   onChange?: (value: boolean, event: MouseEvent) => any;
-  value?: boolean;
 }
 
 const Toggler = setupFieldComponent(
-  forwardNativeElementProps<TogglerProps<string>, HTMLInputElement>(
+  forwardNativeElementProps<TogglerProps, HTMLInputElement>(
     (props, elProps) => {
       const {
         elementId: id,

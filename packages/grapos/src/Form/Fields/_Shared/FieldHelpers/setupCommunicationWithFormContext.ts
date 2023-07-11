@@ -8,10 +8,9 @@ import { FormValue } from '../../../Types/FormValue';
 import { FormProviderValue } from '../../../FormContext';
 
 import { FieldProps } from '../Types/FieldProps';
-import { LeavesOfObject } from '../../../Types/LeavesOfObject';
 
 export function setupCommunicationWithFormContext<
-  T extends FieldProps<LeavesOfObject<K>>,
+  T extends FieldProps<any, K>,
   K extends FormValue = FormValue
 >(props: T, initialValue: FormFieldValue = ''): FormProviderValue<K> | undefined {
   let form: FormProviderValue<K> | undefined = useForm<K>();
@@ -43,4 +42,3 @@ export function setupCommunicationWithFormContext<
     return undefined;
   }
 }
-

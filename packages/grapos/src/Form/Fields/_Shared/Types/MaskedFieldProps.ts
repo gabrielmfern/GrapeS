@@ -1,15 +1,19 @@
 import { InputMask } from '@solid-primitives/input-mask';
 
 import { FieldPropKeys, FieldProps } from './FieldProps';
-import { Key } from '../../../../_Shared/Types/Key';
+import { FormFieldValue } from '../../../Types/FormFieldValue';
+import { FormValue } from '../../../Types/FormValue';
 
-export const MaskedFieldPropsKeys: (keyof MaskedFieldProps<string>)[] = [
+export const MaskedFieldPropsKeys: (keyof MaskedFieldProps)[] = [
   ...FieldPropKeys,
   'mask',
 ];
 
-export interface MaskedFieldProps<FormFieldKeys extends Key>
-  extends FieldProps<FormFieldKeys> {
+// eslint-disable-next-line @typescript-eslint/ban-types
+export interface MaskedFieldProps<
+AllowedValues extends FormFieldValue = any, 
+OwnerFormValue extends FormValue = {}
+> extends FieldProps<AllowedValues, OwnerFormValue> {
   /**
    * @description The mask that should be applied to the field.
    *

@@ -1,4 +1,4 @@
-import { JSX, createEffect } from 'solid-js';
+import { JSX } from 'solid-js';
 
 import { createInputMask } from '@solid-primitives/input-mask';
 
@@ -12,14 +12,16 @@ import { useField } from '../_Shared/FieldHelpers/FieldContext';
 import { forwardNativeElementProps } from '../../../Helpers';
 import { mergeCallbacks } from '../../../Helpers';
 import { setupFieldComponent } from '../_Shared/FieldHelpers/setupFieldComponent';
-import { Key } from '../../../_Shared/Types/Key';
+import { FormValue } from '../../Types/FormValue';
 
 export type TextAreaChangeEvent = Event & {
   currentTarget: HTMLTextAreaElement;
   target: HTMLTextAreaElement;
 };
 
-export interface TextAreaProps<T extends Key> extends MaskedFieldProps<T> {
+export interface TextAreaProps<
+OwnerFormValue extends FormValue = {}
+> extends MaskedFieldProps<string, OwnerFormValue> {
   label?: JSX.Element;
 
   color?: 'primary' | 'secondary' | 'tertiary';
@@ -28,7 +30,7 @@ export interface TextAreaProps<T extends Key> extends MaskedFieldProps<T> {
 }
 
 const TextArea = setupFieldComponent(
-  forwardNativeElementProps<TextAreaProps<string>, HTMLTextAreaElement, JSX.InputHTMLAttributes<HTMLTextAreaElement>>(
+  forwardNativeElementProps<TextAreaProps, HTMLTextAreaElement, JSX.TextareaHTMLAttributes<HTMLTextAreaElement>>(
     (props, elProps) => {
       const {
         elementId: id,
@@ -40,12 +42,6 @@ const TextArea = setupFieldComponent(
         focusedS: [_focused, setFocused],
         validate,
       } = useField<string>()!;
-
-      createEffect(() => {
-        if (props.mask && typeof elProps.type !== 'undefined' && elProps.type === 'number') {
-          throw new Error(`Error with TextArea named ${props.name}: Cannot have a mask on a number text area!`);
-        }
-      });
 
       return (
         <FieldInternalWrapper>

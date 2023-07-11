@@ -20,23 +20,22 @@ import { setupValidateFunction } from './setupValidateFunction';
 import { setupCommunicationWithFormContext } from './setupCommunicationWithFormContext';
 import { setupFieldsValueSignal } from './setupFieldValueSignal';
 import { setupFieldsDisabledSignal } from './setupFieldsDisabledSignal';
-import { Key } from '../../../../_Shared/Types/Key';
-import { LeavesOfObject } from '../../../Types/LeavesOfObject';
 
 export function setupFieldComponent<
-  Props extends FieldProps<Leaves>,
-  OwnerFormValue extends FormValue = FormValue,
-  Leaves extends LeavesOfObject<OwnerFormValue> = LeavesOfObject<OwnerFormValue>,
-  ValueType extends FormFieldValue = FormFieldValue
+  MProps extends FieldProps,
+  AllowedValues extends FormFieldValue = FormFieldValue,
 >(
-  componentFunc: Component<Props>,
-  initialValueParam: ValueType | ((props: Props) => ValueType) = '' as any
+  componentFunc: Component<MProps>,
+  initialValueParam: AllowedValues | ((props: MProps) => AllowedValues) = '' as any
 ) {
-  return <FieldPropKeys extends Key = string>(props: Props & FieldProps<FieldPropKeys>) => {
+  return <
+  OwnerFormValue extends FormValue = {}, 
+  Props extends FieldProps<AllowedValues, OwnerFormValue> = MProps & FieldProps<AllowedValues, OwnerFormValue>
+  >(props: Props) => {
     // eslint-disable-next-line solid/reactivity
     const [errors, setErrors] = props.errorsStore || createStore<string[]>([]);
 
-    const initialValue = typeof initialValueParam === 'function' ? initialValueParam(props) : initialValueParam;
+    const initialValue = typeof initialValueParam === 'function' ? initialValueParam(props as unknown as MProps) : initialValueParam;
 
     const form = setupCommunicationWithFormContext<Props, OwnerFormValue>(
       props,
@@ -45,7 +44,7 @@ export function setupFieldComponent<
     const [value, setValue] = setupFieldsValueSignal<
       Props,
       OwnerFormValue,
-      ValueType
+      AllowedValues
     >(
       props,
       form,
@@ -89,7 +88,7 @@ export function setupFieldComponent<
           fieldProps: splitProps(
             props,
             FieldPropKeys
-          )[0] as unknown as FieldProps<FieldPropKeys>,
+          )[0] as unknown as FieldProps,
 
           hasContent,
           hasErrors,
@@ -97,7 +96,7 @@ export function setupFieldComponent<
           validate,
         }}
       >
-        <Dynamic component={componentFunc} {...props} />
+        <Dynamic component={componentFunc} {...(props as unknown as MProps)} />
       </FieldContext.Provider>
     );
   };

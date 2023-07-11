@@ -29,9 +29,11 @@ import { forwardNativeElementProps } from '../../../Helpers';
 import { useField } from '../_Shared/FieldHelpers/FieldContext';
 import { setupFieldComponent } from '../_Shared/FieldHelpers/setupFieldComponent';
 import { mergeCallbacks } from '../../../Helpers';
-import { Key } from '../../../_Shared/Types/Key';
+import { FormValue } from '../../Types/FormValue';
 
-export interface SelectProps<FormFieldKeys extends Key> extends FieldProps<FormFieldKeys> {
+export interface SelectProps<
+OwnerFormValue extends FormValue = {}
+> extends FieldProps<any, OwnerFormValue> {
   label?: JSX.Element;
 
   color?: 'primary' | 'secondary' | 'tertiary';
@@ -72,7 +74,7 @@ const Option: Component<SelectOptionProps> = (props) =>
  * ```
  */
 const Select = setupFieldComponent(
-  forwardNativeElementProps<SelectProps<string>, HTMLDivElement>(
+  forwardNativeElementProps<SelectProps, HTMLDivElement>(
     (props, elProps) => {
       const {
         elementId: id,
@@ -235,7 +237,7 @@ const Select = setupFieldComponent(
     [...FieldPropKeys, 'label', 'helperText', 'color', 'onChange', 'onFocus']
   )
 ) as {
-  <FieldPropKeys extends Key>(props: SelectProps<FieldPropKeys> & ComponentProps<'div'>): JSX.Element;
+  <OwnerFormValue extends FormValue>(props: SelectProps<OwnerFormValue> & ComponentProps<'div'>): JSX.Element;
   Option(props: SelectOptionProps): JSX.Element;
 };
 

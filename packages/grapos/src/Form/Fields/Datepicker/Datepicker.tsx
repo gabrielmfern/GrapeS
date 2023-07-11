@@ -30,9 +30,11 @@ import { useField } from '../_Shared/FieldHelpers/FieldContext';
 import { forwardNativeElementProps } from '../../../Helpers';
 import { setupFieldComponent } from '../_Shared/FieldHelpers/setupFieldComponent';
 import { mergeCallbacks } from '../../../Helpers';
-import { Key } from '../../../_Shared/Types/Key';
+import { FormValue } from '../../Types/FormValue';
 
-export interface DatepickerProps<T extends Key> extends FieldProps<T> {
+export interface DatepickerProps<
+OwnerFormValue extends FormValue = {}
+> extends FieldProps<Date, OwnerFormValue> {
   label?: string;
 
   color?: 'primary' | 'secondary' | 'tertiary';
@@ -229,7 +231,7 @@ const DatepickerIntenralYearPicker: Component<{
 };
 
 const Datepicker = setupFieldComponent(
-  forwardNativeElementProps<DatepickerProps<string>, HTMLDivElement>(
+  forwardNativeElementProps<DatepickerProps, HTMLDivElement>(
     (props, elProps) => {
       const {
         elementId: id,
