@@ -32,7 +32,13 @@ const _global = typeof window !== 'undefined' ? window : global;
   * This function is inspired in Rust's `dbg!` macro.
   */
 _global.dbg = function<T = any>(el: T, context?: string): T {
-  console.log(`${context}: ${el}`);
+  if (context) {
+    console.groupCollapsed(`${context}:`, el);
+  } else {
+    console.groupCollapsed(el);
+  }
+  console.trace('for this dbg() call');
+  console.groupEnd();
   return el;
 }
 
