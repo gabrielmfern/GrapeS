@@ -9,7 +9,7 @@ import {
   Show,
   ComponentProps,
 } from 'solid-js';
-import Button, { ButtonProps } from '../../../General/Button/Button';
+import Button from '../../../General/Button/Button';
 
 import FieldInternalWrapper from '../_Shared/FieldInternalWrapper/FieldInternalWrapper';
 import Label from '../_Shared/Label/Label';
@@ -24,6 +24,7 @@ import { useField } from '../_Shared/FieldHelpers/FieldContext';
 import { forwardNativeElementProps } from '../../../Helpers';
 import { setupFieldComponent } from '../_Shared/FieldHelpers/setupFieldComponent';
 import { FormValue } from '../../Types/FormValue';
+import { GetProps } from '../../../Helpers/Types/GetProps';
 
 export interface ButtonChooserProps<
 OwnerFormValue extends FormValue = {}
@@ -37,7 +38,7 @@ OwnerFormValue extends FormValue = {}
   onChange?: (newValue: FormFieldValue) => any;
 }
 
-export interface ButtonChooserOptionProps extends ButtonProps {
+export interface ButtonChooserOptionProps extends GetProps<typeof Button.Empty> {
   value: string;
 }
 
